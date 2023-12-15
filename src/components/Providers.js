@@ -14,14 +14,8 @@ export default function Providers({ children }) {
 
 export function CheckSession({children}) {
     const { data: session } = useSession();
-    if (session?.user) return (
+    if (session?.user || true) return (
         <>{children}</>
-    );
-    else return (
-        <Container className="d-flex align-items-center justify-content-center" style={{height:"100vh"}}>
-            <Button onClick={async () => {await signIn("google", { callbackUrl: "/mapa",})}} className="mx-auto bg-sky-400 px-3 py-2 rounded"> Iniciar sesi&oacute;n</Button>
-            {/*{async () => {await signIn("google", { callbackUrl: "/succes",})}}*/}
-        </Container>
     );
 }
 

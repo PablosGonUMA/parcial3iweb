@@ -17,11 +17,11 @@ const myIcon = new L.Icon({
 });
 
 
-function Mapa({ pos = [12.505, -10.09], paradas }) {
+function Mapa({ pos = [12.505, -10.09], eventos }) {
     let posi;
-    console.log("Paradas: ", paradas);
-    paradas.map(parada => {
-        console.log(`Parada: ${parada.nombreParada}, lat: ${parada.lat}, lon: ${parada.lon}`)
+    console.log("Eventos: ", eventos);
+    eventos.map(evento => {
+        console.log(`Evento: ${evento.nombre}, lat: ${evento.lat}, lon: ${evento.lon}`)
     });
     return (
         <MapContainer className={style.map} center={pos} zoom={15} scrollWheelZoom={true}>
@@ -30,20 +30,15 @@ function Mapa({ pos = [12.505, -10.09], paradas }) {
                 url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
             />
             {
-                paradas.map(parada => (
-                    <Marker position={[parada.lat, parada.lon]} icon={myIcon}>
+                eventos.map(evento => (
+                    <Marker position={[evento.lat, evento.lon]} icon={myIcon}>
                         <Popup>
-                            {parada.nombreParada}<br/>
-                            {parada.linea}
+                            {evento.nombre}<br/>
+                            {evento.organizador}
                         </Popup>
                     </Marker> 
                 ))
             }
-            <Marker position={pos} icon={myIcon}>
-                <Popup>
-                    Ubicaci&oacute;n por defecto.
-                </Popup>
-            </Marker>
         </MapContainer>
     );
 }
