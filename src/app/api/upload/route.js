@@ -15,7 +15,6 @@ export async function POST(request) {
         const image = body.image;
         
         if (!image) {
-            console.log(`PASA POR AQUÍ ME CAGO EN TODO 111`)
             return NextResponse.json("no se ha subido ninguna imagen", {status: 400});
         }
 

@@ -28,7 +28,8 @@ export default function Home() {
                     onChange={(e) => setCodPostal(e.target.value)}
                 />
                 <button type="submit" variant="primary" >Enviar</button>
-            </form>
+            </form><br/>
+            <a href="/evento/crear">Crear evento</a>
         </Container>
     );
 }
