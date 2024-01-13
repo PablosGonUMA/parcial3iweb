@@ -7,14 +7,38 @@ export const GET = async (req, res) => {
 
     const { searchParams } = new URL(req.url);
 
-    const codPostal = searchParams.get("codPostal");
+    const latitude = searchParams.get("lat")
+    const longitude = searchParams.get("lon")
 
     try {
         let result;
-        if(codPostal){
-            result = await Evento.find({lugar : codPostal});
+        if(latitude){
+            result = await Evento.find({$expr: 
+                {
+                    $lt: [
+                        {
+                            $abs: {
+                                $substract: [{$toDouble: "$lat"}, { $toDouble: latitude }]
+                            }
+                        }
+                    , 0.2]
+                }
+            , $expr: 
+            {
+                $lt: [
+                    {
+                        $abs: {
+                            $subtract: [{$toDouble: "$lon"}, { $toDouble: longitude }]
+                        }
+                    }
+                , 0.2]
+            }
+        })
+        console.log("Aquí estamos mi gente")
         } else {
-            result = await Evento.find({});
+            console.log("Aquí no estamos mi gente")
+
+            result = await Evento.find();
         }
         return NextResponse.json(result);
     } catch (error) {

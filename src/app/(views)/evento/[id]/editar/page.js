@@ -5,37 +5,20 @@ import { Image } from "next/image"
 import Mapa from "@/components/Mapa";
 import { useState } from "react";
 
-export default function Home() {
+export default function Home({params}) {
 
     const [nombre, setNombre] = useState('');
     const [organizador, setOrganizador] = useState('');
     const [lugar, setLugar] = useState('');
     const [file, setFile] = useState('');
     const [imageUrl, setImageUrl] = useState('');
-    const [direccion, setDireccion] = useState('');
 
-
-
-
+    const id = params.id
       
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    const res = await fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${direccion}`)
-    const coord = await res.json()
-
-    console.log(coord)
-
-    let lat = 0
-    let lon = 0
-
-    if(coord[0]) {
-        lat = coord[0].lat
-        lon = coord[0].lon
-        console.log(`Latitud: ${coord[0].lat}, Longitud: ${coord[0].lon}`);
-    } else {
-        console.log('No se encontraron resultados');
-    }
+    
     
     const responseImg = await fetch("/api/upload", {
         method: "POST",
@@ -57,8 +40,8 @@ export default function Home() {
         // Manejar el error, por ejemplo, mostrar un mensaje al usuario
     }
 
-    const response = await fetch(`/api/eventos`, {
-        method: 'POST',
+    const response = await fetch(`/api/eventos/${id}`, {
+        method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
         },
@@ -66,31 +49,24 @@ export default function Home() {
           nombre: nombre,
           organizador: organizador,
           lugar: lugar,
-          lat: lat,
-          lon: lon,
+          lat: "0",
+          lon: "0",
           imagen: imageUrl
         }),
       });
 
     if (response.ok) {
       console.log('Valoración enviada con éxito');
-      //window.location.href = `/`
+      window.location.href = `/evento/${id}`
     } else {
-      console.error('Error al enviar la valoración', JSON.stringify({
-        nombre: nombre,
-        organizador: organizador,
-        lugar: lugar,
-        lat: lat,
-        lon: lon,
-        imagen: imageUrl
-      }));
+      console.error('Error al enviar la valoración');
     }
   };
 
     //ctrl+mayus+r
     return (
         <Container>
-            <h1>Crear evento</h1>
+            <h1>Editar evento</h1>
             <form className='text-end' onSubmit={handleSubmit}>
                 Nombre: <input
                     value={nombre}
@@ -103,10 +79,6 @@ export default function Home() {
                 Lugar: <input
                     value={lugar}
                     onChange={(e) => setLugar(e.target.value)}
-                /><br/>
-                Dirección: <input
-                    value={direccion}
-                    onChange={(e) => setDireccion(e.target.value)}
                 /><br/>
                 Imagen:<input
                     type="file"
@@ -121,9 +93,9 @@ export default function Home() {
 
                         reader.readAsDataURL(file);
                     }}
-                />
+                /><br/>
 
-                <button type="submit" variant="primary" >Enviar</button>
+                <button type="submit" variant="primary" >Guardar</button>
             </form>
         </Container>
     );

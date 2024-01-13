@@ -9,12 +9,13 @@ export default async function Home({params}) {
 
     const apiUrl = process.env.NEXT_PUBLIC_API_BASE_URL || "http://localhost:3000";
 
-    const codPostal = params.codPostal;
+    const lat = params.lat;
+    const lon = params.lon;
 
-    const res = await fetch(`${apiUrl}/api/eventos?codPostal=${codPostal}`)
+    const res = await fetch(`${apiUrl}/api/eventos?lat=${lat}&lon=${lon}`)
     const eventos = await res.json();
-
-
+    
+    console.log(eventos)
 
     //ctrl+mayus+r
     return (
@@ -41,7 +42,7 @@ export default async function Home({params}) {
 
 
             <Container className="width: 600px">
-                <Mapa pos={[Number(36.71476), Number(-4.27968)]} eventos={eventos} />
+                <Mapa pos={[Number(lat), Number(lon)]} eventos={eventos} />
             </Container>
             </Container>
 

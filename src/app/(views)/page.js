@@ -14,7 +14,13 @@ export default function Home() {
     const handleSubmit = async (e) => {
         e.preventDefault();
         
-        window.location.href = `/eventos/${codPostal}`
+        let res = await fetch(`https://nominatim.openstreetmap.org/search?format=json&postalcode=${codPostal}&countrycodes=es`);
+        const pos = await res.json();
+
+        const lat = parseFloat(pos[0].lat).toFixed(2)
+        const lon = parseFloat(pos[0].lon).toFixed(2)
+
+        window.location.href = `/eventos/${lat}/${lon}`
 
     }
 

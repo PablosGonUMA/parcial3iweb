@@ -11,11 +11,11 @@ const eventoSchema = new mongoose.Schema(
             required: [true]
         },
         lon:{
-            type: String,
+            type: Number,
             required: [true]
         },
         lat:{
-            type: String,
+            type: Number,
             required: [true]
         },
         organizador:{
