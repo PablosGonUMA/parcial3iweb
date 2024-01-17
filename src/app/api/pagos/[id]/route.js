@@ -1,6 +1,6 @@
 import connectDB from "@/lib/db";
 import { NextResponse } from "next/server";
-import { Pago } from "@/models/Evento";
+import { Pago } from "@/models/Pago";
 
 export const GET = async (request, { params }) => {
     await connectDB();
