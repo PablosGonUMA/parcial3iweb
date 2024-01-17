@@ -4,6 +4,7 @@ import { Card, CardImg, CardTitle, Row, Col, Container, CardText, CardLink, Card
 import { Image } from "next/image"
 import Mapa from "@/components/Mapa";
 import { useState } from "react";
+import { useSession } from "next-auth/react";
 
 export default function Home() {
 
@@ -14,10 +15,8 @@ export default function Home() {
     const [imageUrl, setImageUrl] = useState('');
     const [direccion, setDireccion] = useState('');
 
+    const { data: session } = useSession(); 
 
-
-
-      
   const handleSubmit = async (e) => {
     e.preventDefault();
 
@@ -36,6 +35,8 @@ export default function Home() {
     } else {
         console.log('No se encontraron resultados');
     }
+
+    setOrganizador(session?.user.email)
     
     const responseImg = await fetch("/api/upload", {
         method: "POST",
@@ -74,7 +75,7 @@ export default function Home() {
 
     if (response.ok) {
       console.log('Valoración enviada con éxito');
-      //window.location.href = `/`
+      window.location.href = `/`
     } else {
       console.error('Error al enviar la valoración', JSON.stringify({
         nombre: nombre,
@@ -90,15 +91,13 @@ export default function Home() {
     //ctrl+mayus+r
     return (
         <Container>
+            { session?.user ? 
+            <Container>
             <h1>Crear evento</h1>
             <form className='text-end' onSubmit={handleSubmit}>
                 Nombre: <input
                     value={nombre}
                     onChange={(e) => setNombre(e.target.value)}
-                /><br/>
-                Organizador: <input
-                    value={organizador}
-                    onChange={(e) => setOrganizador(e.target.value)}
                 /><br/>
                 Lugar: <input
                     value={lugar}
@@ -125,6 +124,10 @@ export default function Home() {
 
                 <button type="submit" variant="primary" >Enviar</button>
             </form>
+            </Container>
+            :
+            <h2>Para crear un evento debes iniciar sesión</h2>
+                }
         </Container>
     );
 }

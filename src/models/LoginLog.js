@@ -10,7 +10,7 @@ const loginLogSchema = new mongoose.Schema({
         sub: { type: String, required: true },
         iat: { type: String, required: true },
         exp: { type: String, required: true }, 
-        jti: { type: String, required: true },
+        jti: { type: String, required: true, unique: true },
     },
 }, {
     timestamps: true,

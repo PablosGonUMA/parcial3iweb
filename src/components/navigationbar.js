@@ -56,8 +56,4 @@ const NavigationBar = () => {
     );
 }
 
-function signInSuccesful() {
-    console.log("Sesión iniciada correctamente");
-}
-
 export default NavigationBar;
