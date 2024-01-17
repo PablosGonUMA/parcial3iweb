@@ -14,9 +14,17 @@ export default function Providers({ children }) {
 
 export function CheckSession({children}) {
     const { data: session } = useSession();
-    if (session?.user || true) return (
-        <>{children}</>
-    );
+    if (session?.user){
+        return (
+            <>{children}</>
+        )
+    } else {
+        return (<div>
+            <Button onClick={() => {signIn("google", { callbackUrl: "/",}).then(() => {
+                console.log("Sesión iniciada correctamente")
+            })}} className="bg-sky-400 px-3 py-2 rounded"> Iniciar sesi&oacute;n </Button>
+        </div>)
+    }
 }
 
 function signInSuccesful() {

@@ -1,41 +1,35 @@
-"use client"
 import Link from "next/link";
-import { Card, CardImg, CardTitle, Row, Col, Container, CardText, CardLink, CardFooter, Form } from 'react-bootstrap';
+import { Card, CardImg, CardTitle, Row, Col, Container, CardText, CardLink, CardFooter, Form, CardSubtitle } from 'react-bootstrap';
 import { Image } from "next/image"
 import Mapa from "@/components/Mapa";
-import { useState } from "react";
+import 'leaflet/dist/leaflet.css'
+import Saldo from "@/components/saldo";
 
-export default function Home() {
+export default async function Home() {
 
     const apiUrl = process.env.NEXT_PUBLIC_API_BASE_URL || "http://localhost:3000";
 
-    const [codPostal, setCodPostal] = useState('');
-
-    const handleSubmit = async (e) => {
-        e.preventDefault();
-        
-        let res = await fetch(`https://nominatim.openstreetmap.org/search?format=json&postalcode=${codPostal}&countrycodes=es`);
-        const pos = await res.json();
-
-        const lat = parseFloat(pos[0].lat).toFixed(2)
-        const lon = parseFloat(pos[0].lon).toFixed(2)
-
-        window.location.href = `/eventos/${lat}/${lon}`
-
-    }
+    const res = await fetch(`${apiUrl}/api/pagos`)
+    const pagos = await res.json()
 
     //ctrl+mayus+r
     return (
         <Container>
-            Buscar eventos:
-            <form className='text-end' onSubmit={handleSubmit}>
-                <input
-                    value={codPostal}
-                    onChange={(e) => setCodPostal(e.target.value)}
-                />
-                <button type="submit" variant="primary" >Enviar</button>
-            </form><br/>
-            <a href="/evento/crear">Crear evento</a>
+            <Saldo pagos={pagos}/>
+            <a href="/crear">Anotar pago</a>
+            {
+            pagos.map((pago) => (
+                <Col key={pago._id} className='mb-3'>
+                            <Card className='text-center h-100 w-100'>
+                                    <CardImg className='flex-fill' src={pago.imagen} alt={pago.nombre} />
+                                    <CardTitle className='text-wrap mx-2'>{pago.concepto} ({pago.importe}€)</CardTitle>
+                                    <CardSubtitle>{pago.email}</CardSubtitle>
+                                    <Link href={`/pago/${pago._id}`} passhref="true" className='text-decoration-none'>Editar</Link>
+                            </Card>
+                        </Col>
+            ))
+            }
+            <Mapa eventos={pagos} pos={[pagos[0].lat, pagos[0].lon]}/>
         </Container>
     );
 }
